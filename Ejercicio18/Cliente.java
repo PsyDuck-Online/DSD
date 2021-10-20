@@ -3,39 +3,48 @@ import java.util.Random;
 
 public class Cliente {
 
+    private static final String IP = "localhost";
+    private static final int PORT = 6789;
+
     public static void main(String[] args) {
-        String ip = "localhost";
-        RemoteRef rr = new RemoteRef(ip, 6789);
+        System.out.println("Cliente iniciado.");
+        RemoteRef rr = new RemoteRef(IP, PORT);
         Solicitud solicitud = new Solicitud();
-        ArrayList<String> args_envio = new ArrayList<>();
+        ArrayList<String> args_enviar = new ArrayList<>();
         Random random = new Random();
 
-        try {
-            while (true) {
-                double ciclos = 1 + (1000000 - 1) * random.nextDouble();
-                double incremento = random.nextDouble();
+        int bd_cliente = 0;
 
-                args_envio.add(String.valueOf(ciclos));
-                args_envio.add(String.valueOf(incremento));
+        while (true) {
+            int deposito = random.nextInt((10 - 1) + 1) + 1;
+            bd_cliente += deposito;
 
-                ArrayList<String> args_recv = solicitud.doOperation(rr, 0, args_envio);
+            System.out.println("deposito: " + deposito + " cuenta: " + bd_cliente);
 
-                for (String i : args_recv) {
-                    if ("./EXIT".equals(i)) {
-                        System.out.println("Error con el servidor.");
-                        System.exit(0);
-                    }
-                }
+            args_enviar.add(String.valueOf(deposito));
 
-                String total = solicitud.doOperation(rr, 0, args_envio).get(0);
+            ArrayList<String> args_recv = solicitud.doOperation(rr, 0, args_enviar);
 
-                System.out.println("Ciclos: " + ciclos + " || Incremneto: " + incremento + " || Total: " + total);
-                args_envio.clear();
-
-                Thread.sleep(3000);
+            if ("./CONN_LOSED".equals(args_recv.get(0))) {
+                continue;
             }
-        } catch (InterruptedException e) {
-            System.out.println("Interrupted: " + e.getMessage());
+
+            int bd_servidor = Integer.parseInt(args_recv.get(0));
+
+            if (bd_cliente != bd_servidor) {
+                System.out.println("Error en la cuenta!");
+                System.out
+                        .println(String.format("Cantidad real: %d || Cantidad devuelta: %d", bd_cliente, bd_servidor));
+                System.exit(0);
+            }
+
+            args_enviar.clear();
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ex) {
+                System.out.println("Interrupted: " + ex.getMessage());
+            }
         }
     }
 }
