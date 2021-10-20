@@ -34,13 +34,17 @@ public class Solicitud {
             int counter = 0;
             boolean continueSendig = true;
             byte[] buffer = new byte[1000];
+
             // reiniciamos argumentosRespuesta
             argumentosRespuesta.clear();
+
+            // creamos el mensaje
+            Mensaje msg_send = new Mensaje(0, 1, rr, operationId, arguments);
 
             // ArrrayList arguments -> bite[]
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(bytes);
-            os.writeObject(arguments);
+            os.writeObject(msg_send);
             os.close();
 
             request = new DatagramPacket(bytes.toByteArray(), bytes.size(), InetAddress.getByName(rr.getIP()),
@@ -64,23 +68,28 @@ public class Solicitud {
                     // byte[] -> ArrayList
                     ByteArrayInputStream byteArray = new ByteArrayInputStream(reply.getData());
                     ObjectInputStream is = new ObjectInputStream(byteArray);
-                    ArrayList<String> aux_array = (ArrayList<String>) is.readObject();
+                    // ArrayList<String> aux_array = (ArrayList<String>) is.readObject();
+                    Mensaje msg_recv = (Mensaje) is.readObject();
+
                     is.close();
 
                     // agregamos los elementos de aux_array a argumentosRespuesta
-                    for (String i : aux_array) {
-                        argumentosRespuesta.add(i);
-                    }
+                    // for (String i : aux_array) {
+                    // argumentosRespuesta.add(i);
+                    // }
+                    argumentosRespuesta = msg_recv.getArguments();
 
                 } catch (SocketTimeoutException e) {
                     // sin respuesta del servidor por 1 seg... volviendo a enviar
                 }
             }
+
             // comprobamos que no se haya superado el limite de intentos
             // si se supero enviamos la opcion para el cierre del cliente
             if (counter >= limite_intentos) {
-                argumentosRespuesta.add("./EXIT");
+                argumentosRespuesta.add("./CONN_LOSED");
             }
+
         } catch (IOException ex) {
             System.out.println("IO: " + ex.getMessage());
         } catch (ClassNotFoundException ex) {

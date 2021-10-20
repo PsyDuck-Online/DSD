@@ -3,15 +3,15 @@ import java.util.Random;
 
 public class Cliente {
 
-    private static final String IP = "localhost";
     private static final int PORT = 6789;
 
     public static void main(String[] args) {
         System.out.println("Cliente iniciado.");
-        RemoteRef rr = new RemoteRef(IP, PORT);
+        RemoteRef rr = new RemoteRef(args[0], PORT);
         Solicitud solicitud = new Solicitud();
         ArrayList<String> args_enviar = new ArrayList<>();
         Random random = new Random();
+        int operationId = 0;
 
         int bd_cliente = 0;
 
@@ -23,10 +23,12 @@ public class Cliente {
 
             args_enviar.add(String.valueOf(deposito));
 
-            ArrayList<String> args_recv = solicitud.doOperation(rr, 0, args_enviar);
+            ArrayList<String> args_recv = solicitud.doOperation(rr, operationId, args_enviar);
+            operationId += 1;
 
             if ("./CONN_LOSED".equals(args_recv.get(0))) {
-                continue;
+                System.out.println("Cerrando cliente, falla con el servidor");
+                break;
             }
 
             int bd_servidor = Integer.parseInt(args_recv.get(0));
