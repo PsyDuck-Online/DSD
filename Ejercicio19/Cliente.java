@@ -17,7 +17,6 @@ public class Cliente {
 
         while (true) {
             int deposito = random.nextInt((10 - 1) + 1) + 1;
-            bd_cliente += deposito;
 
             System.out.println("deposito: " + deposito + " cuenta: " + bd_cliente);
 
@@ -38,6 +37,8 @@ public class Cliente {
                 System.out
                         .println(String.format("Cantidad real: %d || Cantidad devuelta: %d", bd_cliente, bd_servidor));
                 System.exit(0);
+            } else {
+                bd_cliente += deposito;
             }
 
             args_enviar.clear();

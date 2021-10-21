@@ -32,6 +32,8 @@ public class Respuesta {
     public ArrayList<String> getRequest() {
         try {
 
+            // argumentosRespuesta.clear();
+
             // obtenemos los datos de la peticion en bytes[]
             byte[] buffer = new byte[1000];
             request = new DatagramPacket(buffer, buffer.length);
@@ -46,7 +48,8 @@ public class Respuesta {
                 Mensaje msg = (Mensaje) is.readObject();
                 argumentosRespuesta = msg.getArguments();
 
-                if (msg.getOperationId() != 0) {
+                if (msg.getRequestId() != 0) {
+                    argumentosRespuesta.clear();
                     argumentosRespuesta.add("./PACKET_LOSED");
                 }
 

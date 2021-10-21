@@ -17,7 +17,7 @@ public class Solicitud {
     private DatagramPacket reply;
     ArrayList<String> argumentosRespuesta;
 
-    private final int limite_intentos = 5;
+    private final int limite_intentos = 10;
 
     public Solicitud() {
         try {

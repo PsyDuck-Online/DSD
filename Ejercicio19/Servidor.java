@@ -12,18 +12,19 @@ public class Servidor {
         while (true) {
             ArrayList<String> args_recv = respuesta.getRequest();
 
-            System.out.println("Nueva peticion!");
-            System.out.println(args_recv);
+            System.out.println("\nNueva peticion!");
 
-            if ("./PACKET_LOSED".equals(args_recv.get(0))) {
+            if (!("./PACKET_LOSED".equals(args_recv.get(0)))) {
                 int deposito = Integer.parseInt(args_recv.get(0));
                 nbd += deposito;
+            } else {
+                System.out.println("Hubo perdida de paquete y no se realizo la operación.");
             }
 
             args_enviar.add(String.valueOf(nbd));
-
             respuesta.sendReply(args_enviar);
             args_enviar.clear();
+
         }
     }
 }
