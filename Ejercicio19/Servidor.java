@@ -13,12 +13,11 @@ public class Servidor {
             ArrayList<String> args_recv = respuesta.getRequest();
 
             System.out.println("\nNueva peticion!");
+            System.out.println("nbd: " + nbd);
 
             if (!("./PACKET_LOSED".equals(args_recv.get(0)))) {
                 int deposito = Integer.parseInt(args_recv.get(0));
                 nbd += deposito;
-            } else {
-                System.out.println("Hubo perdida de paquete y no se realizo la operación.");
             }
 
             args_enviar.add(String.valueOf(nbd));

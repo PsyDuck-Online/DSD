@@ -49,7 +49,7 @@ public class Respuesta {
                 argumentosRespuesta = msg.getArguments();
 
                 if (msg.getRequestId() != 0) {
-                    argumentosRespuesta.clear();
+
                     argumentosRespuesta.add("./PACKET_LOSED");
                 }
 

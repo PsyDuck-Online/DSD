@@ -21,6 +21,7 @@ public class Cliente {
             System.out.println("deposito: " + deposito + " cuenta: " + bd_cliente);
 
             args_enviar.add(String.valueOf(deposito));
+            bd_cliente += deposito;
 
             ArrayList<String> args_recv = solicitud.doOperation(rr, operationId, args_enviar);
             operationId += 1;
@@ -37,8 +38,6 @@ public class Cliente {
                 System.out
                         .println(String.format("Cantidad real: %d || Cantidad devuelta: %d", bd_cliente, bd_servidor));
                 System.exit(0);
-            } else {
-                bd_cliente += deposito;
             }
 
             args_enviar.clear();
