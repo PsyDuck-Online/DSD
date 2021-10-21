@@ -38,21 +38,21 @@ public class Solicitud {
             // reiniciamos argumentosRespuesta
             argumentosRespuesta.clear();
 
-            // creamos el mensaje
-            Mensaje msg_send = new Mensaje(0, 1, rr, operationId, arguments);
-
-            // ArrrayList arguments -> bite[]
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            ObjectOutputStream os = new ObjectOutputStream(bytes);
-            os.writeObject(msg_send);
-            os.close();
-
-            request = new DatagramPacket(bytes.toByteArray(), bytes.size(), InetAddress.getByName(rr.getIP()),
-                    rr.getPuerto());
-
             reply = new DatagramPacket(buffer, buffer.length);
 
             while (continueSendig && counter < limite_intentos) {
+                // creamos el mensaje
+                Mensaje msg_send = new Mensaje(0, counter, rr, operationId, arguments);
+
+                // ArrrayList arguments -> bite[]
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                ObjectOutputStream os = new ObjectOutputStream(bytes);
+                os.writeObject(msg_send);
+                os.close();
+
+                request = new DatagramPacket(bytes.toByteArray(), bytes.size(), InetAddress.getByName(rr.getIP()),
+                        rr.getPuerto());
+
                 // enviamos la peticion
                 aSocket.send(request);
                 counter += 1;
@@ -73,10 +73,6 @@ public class Solicitud {
 
                     is.close();
 
-                    // agregamos los elementos de aux_array a argumentosRespuesta
-                    // for (String i : aux_array) {
-                    // argumentosRespuesta.add(i);
-                    // }
                     argumentosRespuesta = msg_recv.getArguments();
 
                 } catch (SocketTimeoutException e) {

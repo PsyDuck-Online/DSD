@@ -15,8 +15,10 @@ public class Servidor {
             System.out.println("Nueva peticion!");
             System.out.println(args_recv);
 
-            int deposito = Integer.parseInt(args_recv.get(0));
-            nbd += deposito;
+            if ("./PACKET_LOSED".equals(args_recv.get(0))) {
+                int deposito = Integer.parseInt(args_recv.get(0));
+                nbd += deposito;
+            }
 
             args_enviar.add(String.valueOf(nbd));
 

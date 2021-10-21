@@ -40,10 +40,16 @@ public class Respuesta {
             // convertimos el byte[] -> ArrayList
             ByteArrayInputStream byteArray = new ByteArrayInputStream(request.getData());
             ObjectInputStream is = new ObjectInputStream(byteArray);
-            // ArrayList<String> aux_array = (ArrayList<String>) is.readObject();
+
             try {
+
                 Mensaje msg = (Mensaje) is.readObject();
                 argumentosRespuesta = msg.getArguments();
+
+                if (msg.getOperationId() != 0) {
+                    argumentosRespuesta.add("./PACKET_LOSED");
+                }
+
             } catch (ClassNotFoundException e) {
                 System.out.println("Class Not Found:" + e.getMessage());
             }
