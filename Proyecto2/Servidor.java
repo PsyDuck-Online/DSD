@@ -37,10 +37,8 @@ public class Servidor {
 
         Token token = null;
 
-        
-
         try {
-            
+
             if (puerto_escucha == puerto_inicial) {
                 System.out.println("Creando token");
                 token = new Token("localhost", LocalTime.now(), puerto_envio, puerto_escucha, 0);
@@ -49,7 +47,7 @@ public class Servidor {
             }
 
             aSocket = new DatagramSocket(puerto_escucha);
-        
+
             while (true) {
                 if (token != null) {
                     // serializable -> bytes
