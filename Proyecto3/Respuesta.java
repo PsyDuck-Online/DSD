@@ -9,79 +9,53 @@ import java.net.SocketException;
 import java.util.ArrayList;
 
 public class Respuesta {
-
     private DatagramSocket aSocket;
     private DatagramPacket request;
     private DatagramPacket reply;
-    private int puertoServidor;
     private RemoteRef rr;
-    ArrayList<String> argumentosRespuesta;
+    private ArrayList<String> argumentosRespuesta;
 
-    public Respuesta(int puertoServidor) {
+    public Respuesta(int puerto) {
+        argumentosRespuesta = new ArrayList<>();
         try {
-
-            this.puertoServidor = puertoServidor;
-            aSocket = new DatagramSocket(this.puertoServidor);
-            argumentosRespuesta = new ArrayList<>();
-
+            aSocket = new DatagramSocket(puerto);
         } catch (SocketException e) {
             System.out.println("Socket: " + e.getMessage());
         }
     }
 
     public ArrayList<String> getRequest() {
+        byte[] buffer = new byte[1000];
+        request = new DatagramPacket(buffer, buffer.length);
+        argumentosRespuesta.clear();
         try {
-
-            // argumentosRespuesta.clear();
-
-            // obtenemos los datos de la peticion en bytes[]
-            byte[] buffer = new byte[1000];
-            request = new DatagramPacket(buffer, buffer.length);
             aSocket.receive(request);
-
-            // convertimos el byte[] -> ArrayList
             ByteArrayInputStream byteArray = new ByteArrayInputStream(request.getData());
             ObjectInputStream is = new ObjectInputStream(byteArray);
-
-            try {
-
-                Mensaje msg = (Mensaje) is.readObject();
-                argumentosRespuesta = msg.getArguments();
-
-                if (msg.getRequestId() != 0) {
-
-                    argumentosRespuesta.add("./PACKET_LOSED");
-                }
-
-            } catch (ClassNotFoundException e) {
-                System.out.println("Class Not Found:" + e.getMessage());
-            }
+            Mensaje mensaje = (Mensaje) is.readObject();
             is.close();
-
-        } catch (SocketException e) {
-            System.out.println("Socket: " + e.getMessage());
+            if (mensaje.getRequestId() != 0) {
+                argumentosRespuesta.add(0, ".PACKET_LOST");
+            }
         } catch (IOException e) {
             System.out.println("IO: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class Not Found: " + e.getMessage());
         }
-
         return argumentosRespuesta;
     }
 
     public void sendReply(ArrayList<String> arguments) {
-        try {
-            Mensaje msg = new Mensaje(1, 1, rr, 0, arguments);
+        Mensaje mensaje = new Mensaje(1, 0, rr, 0, arguments);
 
-            // arguments(ArrayList) -> byte[]
+        try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(bytes);
-            os.writeObject(msg);
+            os.writeObject(mensaje);
             os.close();
 
-            // enviamos la informacion pasada por el parametro arguments
             reply = new DatagramPacket(bytes.toByteArray(), bytes.size(), request.getAddress(), request.getPort());
-
             aSocket.send(reply);
-
         } catch (IOException e) {
             System.out.println("IO: " + e.getMessage());
         }
