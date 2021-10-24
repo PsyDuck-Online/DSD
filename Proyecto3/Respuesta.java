@@ -27,15 +27,17 @@ public class Respuesta {
     public ArrayList<String> getRequest() {
         byte[] buffer = new byte[1000];
         request = new DatagramPacket(buffer, buffer.length);
-        argumentosRespuesta.clear();
         try {
             aSocket.receive(request);
             ByteArrayInputStream byteArray = new ByteArrayInputStream(request.getData());
             ObjectInputStream is = new ObjectInputStream(byteArray);
             Mensaje mensaje = (Mensaje) is.readObject();
             is.close();
+
+            argumentosRespuesta = mensaje.getArguments();
+
             if (mensaje.getRequestId() != 0) {
-                argumentosRespuesta.add(0, ".PACKET_LOST");
+                argumentosRespuesta.add(0, "./PACKET_LOST");
             }
         } catch (IOException e) {
             System.out.println("IO: " + e.getMessage());

@@ -11,7 +11,7 @@ public class Cliente {
             System.exit(0);
         }
 
-        System.out.println("Cliente iniciado\n");
+        System.out.println("Cliente iniciado");
 
         RemoteRef rr = new RemoteRef(args[0], puerto);
         Solicitud solicitud = new Solicitud();
@@ -25,7 +25,11 @@ public class Cliente {
             int deposito = random.nextInt((10 - 1) + 1) + 1;
             int bd_servidor;
 
-            System.out.println(String.format("{deposito: %d, bd_cliente: %d}", deposito, bd_cliente));
+            // System.out.println(String.format("{deposito: %d, bd_cliente: %d}", deposito,
+            // bd_cliente));
+
+            System.out.println(String.format("\n\nNueva solicitud realizada\ndeposito: %d, monto: %d -> monto: %d",
+                    deposito, bd_cliente, (bd_cliente + deposito)));
 
             args_enviar.add(String.valueOf(deposito));
             bd_cliente += deposito;
@@ -37,6 +41,8 @@ public class Cliente {
                 System.out.println("Conexion perdida.");
                 break;
             } else if ("./PACKET_LOST".equals(args_recv.get(0))) {
+                System.out.println(String.format("HUBO PERDIDA DE PAQUETE!!\nmonto: %d -> %d\n", bd_cliente,
+                        (bd_cliente - deposito)));
                 bd_cliente -= deposito;
                 bd_servidor = Integer.parseInt(args_recv.get(1));
             } else {
@@ -44,8 +50,8 @@ public class Cliente {
             }
 
             if (bd_cliente != bd_servidor) {
-                System.out.println("Error en la cuenta");
-                System.out.println(String.format("bd_cliente: %d/bd_servidor: %d", bd_cliente, bd_servidor));
+                System.out.println("ERROR EN LA CUENTA!!");
+                System.out.println(String.format("(bd_cliente: %d / bd_servidor: %d)", bd_cliente, bd_servidor));
                 break;
             }
 

@@ -72,7 +72,7 @@ public class Solicitud {
                 argumentosRespuesta = mensaje_recv.getArguments();
 
             } catch (SocketTimeoutException e) {
-                System.out.println("Socket Timeout:" + e.getMessage());
+                //System.out.println("Socket Timeout:" + e.getMessage());
             } catch (IOException e) {
                 System.out.println("IO: " + e.getMessage());
             } catch (ClassNotFoundException e) {

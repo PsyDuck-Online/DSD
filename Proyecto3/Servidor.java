@@ -13,14 +13,16 @@ public class Servidor {
         while (true) {
             ArrayList<String> args_recv = respuesta.getRequest();
 
-            System.out.println("Nueva peticion recibida!");
-            System.out.println("nbd: " + nbd);
+            System.out.println("\n\nNUEVA PETICION!");
 
-            if (!("./PACKET_LOST".equals(args_recv.get(0)))) {
-                int deposito = Integer.parseInt(args_recv.get(0));
-                nbd += deposito;
-            } else {
+            if (args_recv.get(0) == "./PACKET_LOST") {
+                System.out.println(String.format("HUBO PERDIDA DE PAQUETES!!\nnbd: %d", nbd));
                 args_enviar.add("./PACKET_LOST");
+            } else {
+                int deposito = Integer.parseInt(args_recv.get(0));
+
+                System.out.println(String.format("nbd: %d, deposito: %d -> nbd: %d", nbd, deposito, (nbd + deposito)));
+                nbd = nbd + deposito;
             }
 
             args_enviar.add(String.valueOf(nbd));
