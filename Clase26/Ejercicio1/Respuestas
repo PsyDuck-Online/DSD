@@ -1,0 +1,23 @@
+--- ¿cuánto espacio de almacenamiento será necesario? (para 70 millones) ---
+
+1 voto = 57 bytes
+
+2 votos = 114 bytes
+
+10 votos = 570 bytes
+
+100 votos = 5,700 bytes
+
+70,000,000 votos = 3,990,000,000 bytes = 3.99 GB
+
+--- ¿Es posible almacenarlo en su disco duro? ---
+
+R: Si
+
+--- ¿En una memoria USB? ---
+
+R: Si
+
+--- ¿Y en un archivo virtual dentro de la RAM? ---
+
+R: Si

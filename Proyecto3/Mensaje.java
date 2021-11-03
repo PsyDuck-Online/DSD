@@ -1,19 +1,18 @@
 import java.io.Serializable;
-import java.util.ArrayList;
 
-public class Mensaje implements Serializable {
+public class Mensaje implements Serializable{
     private int messageType;
     private int requestId;
-    private RemoteRef rr;
     private int operationId;
-    ArrayList<String> arguments;
+    private RemoteRef rr;
+    private Token token;
 
-    public Mensaje(int messageType, int requestId, RemoteRef rr, int operationId, ArrayList<String> arguments) {
+    public Mensaje(int messageType, int requestId, int operationId, RemoteRef rr, Token token) {
         this.messageType = messageType;
         this.requestId = requestId;
-        this.rr = rr;
         this.operationId = operationId;
-        this.arguments = arguments;
+        this.rr = rr;
+        this.token = token;
     }
 
     public int getMessageType() {
@@ -24,23 +23,20 @@ public class Mensaje implements Serializable {
         return requestId;
     }
 
-    public RemoteRef getRr() {
-        return rr;
-    }
-
     public int getOperationId() {
         return operationId;
     }
 
-    public ArrayList<String> getArguments() {
-        return arguments;
+    public RemoteRef getRr() {
+        return rr;
+    }
+
+    public Token getToken() {
+        return token;
     }
 
     @Override
     public String toString() {
-        for (String i : arguments) {
-            System.out.println(i);
-        }
-        return "";
+        return token.toString();
     }
 }

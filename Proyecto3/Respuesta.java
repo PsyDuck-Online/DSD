@@ -5,61 +5,62 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.ArrayList;
 
 public class Respuesta {
     private DatagramSocket aSocket;
     private DatagramPacket request;
     private DatagramPacket reply;
     private RemoteRef rr;
-    private ArrayList<String> argumentosRespuesta;
+    private Token token;
 
     public Respuesta(int puerto) {
-        argumentosRespuesta = new ArrayList<>();
         try {
             aSocket = new DatagramSocket(puerto);
         } catch (SocketException e) {
-            System.out.println("Socket: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    public ArrayList<String> getRequest() {
-        byte[] buffer = new byte[1000];
+    public Token getRequest() {
+        byte buffer[] = new byte[1000];
         request = new DatagramPacket(buffer, buffer.length);
         try {
+            // Recibimos el arreglo en bytes y lo transformamos a Mensaje
             aSocket.receive(request);
             ByteArrayInputStream byteArray = new ByteArrayInputStream(request.getData());
             ObjectInputStream is = new ObjectInputStream(byteArray);
             Mensaje mensaje = (Mensaje) is.readObject();
             is.close();
 
-            argumentosRespuesta = mensaje.getArguments();
-
-            if (mensaje.getRequestId() != 0) {
-                argumentosRespuesta.add(0, "./PACKET_LOST");
-            }
+            token = mensaje.getToken();
         } catch (IOException e) {
-            System.out.println("IO: " + e.getMessage());
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            System.out.println("Class Not Found: " + e.getMessage());
+            e.printStackTrace();
         }
-        return argumentosRespuesta;
+
+        return token;
     }
 
-    public void sendReply(ArrayList<String> arguments) {
-        Mensaje mensaje = new Mensaje(1, 0, rr, 0, arguments);
+    public void sendReply(Token token) {
+        Mensaje mensaje = new Mensaje(1, 0, 0, rr, token);
 
         try {
+
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(bytes);
             os.writeObject(mensaje);
             os.close();
 
-            reply = new DatagramPacket(bytes.toByteArray(), bytes.size(), request.getAddress(), request.getPort());
+            InetAddress address = request.getAddress();
+            int port = request.getPort();
+            reply = new DatagramPacket(bytes.toByteArray(), bytes.size(), address, port);
             aSocket.send(reply);
+
         } catch (IOException e) {
-            System.out.println("IO: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

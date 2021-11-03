@@ -17,8 +17,16 @@ public class RemoteRef implements Serializable {
         return puerto;
     }
 
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public void setPuerto(int puerto) {
+        this.puerto = puerto;
+    }
+
     @Override
     public String toString() {
-        return String.format("RemoteRef{ip: %s, puerto: %d}", ip, puerto);
+        return String.format("RemoteRef{ip -> %s, puerto -> %d}", ip, puerto);
     }
 }
