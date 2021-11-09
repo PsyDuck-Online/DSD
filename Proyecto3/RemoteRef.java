@@ -1,6 +1,4 @@
-import java.io.Serializable;
-
-public class RemoteRef implements Serializable {
+public class RemoteRef {
     private String ip;
     private int puerto;
 
@@ -8,6 +6,10 @@ public class RemoteRef implements Serializable {
         this.ip = ip;
         this.puerto = puerto;
     }
+
+    // -------------------
+    // Getters
+    // -------------------
 
     public String getIp() {
         return ip;
@@ -17,6 +19,10 @@ public class RemoteRef implements Serializable {
         return puerto;
     }
 
+    // -------------------
+    // Setters
+    // -------------------
+
     public void setIp(String ip) {
         this.ip = ip;
     }
@@ -25,8 +31,4 @@ public class RemoteRef implements Serializable {
         this.puerto = puerto;
     }
 
-    @Override
-    public String toString() {
-        return String.format("RemoteRef{ip -> %s, puerto -> %d}", ip, puerto);
-    }
 }

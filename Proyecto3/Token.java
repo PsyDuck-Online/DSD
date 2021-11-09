@@ -3,65 +3,111 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Token implements Serializable {
-    private ArrayList<String> ip_list;
-    private int id_proceso;
-    private final LocalTime hora_levantamiento;
-    private LocalTime ultima_hora_funcionamiento;
+    private String ip;
+    private int puertoDestino;
+    private int puertoEnvio;
+    private ArrayList<Integer> listaPuertos;
+    private int idProceso;
+    private final LocalTime horaLevantamiento;
+    private LocalTime ultimaHora;
 
-    public Token(LocalTime hora_levantamiento, int id_proceso) {
-        ip_list = new ArrayList<>();
-        this.hora_levantamiento = hora_levantamiento;
-        this.ultima_hora_funcionamiento = hora_levantamiento;
-        this.id_proceso = id_proceso;
+    public Token(String ip, int puertoDestino, int puertoEnvio, int idProceso) {
+        this.ip = ip;
+        this.puertoDestino = puertoDestino;
+        this.puertoEnvio = puertoEnvio;
+        this.idProceso = idProceso;
+        horaLevantamiento = LocalTime.now();
+        ultimaHora = horaLevantamiento;
+        listaPuertos = new ArrayList<>();
+        listaPuertos.add(puertoEnvio);
     }
 
-    public void addIp(String ip) {
-        boolean seEncuentra = ip_list.contains(ip);
-        if (!seEncuentra) {
-            ip_list.add(ip);
-        } else {
-            System.out.println("Ya se encuentra una ip con la misma direccion");
+    // -------------------
+    // Funciones
+    // -------------------
+
+    // Agrega un puerto a la lista 
+    // Devuelve True si se pudo a gregar y False si no se agrego
+    public boolean agregarPuerto(int puerto) {
+        boolean condicion = false;
+
+        boolean estaPuerto = listaPuertos.contains(puerto);
+        if (!estaPuerto) {
+            listaPuertos.add(puerto);
+            condicion = true;
         }
+
+        return condicion;
     }
 
-    public void deleteIp(String ip) {
-        int indice = ip_list.indexOf(ip);
-        if (indice != -1) {
-            ip_list.remove(indice);
-        } else {
-            System.out.println(String.format("El elemento '%s' no esta en la lista", ip));
+    // Elimina un puerto de la lista
+    // Devuelve true si se pudo agregar y false si no se pudo agregar
+    public boolean eliminarPuerto(int puerto) {
+        boolean condicion = false;
+
+        int posicion = listaPuertos.indexOf(puerto);
+        if (posicion != -1) {
+            listaPuertos.remove(posicion);
+            condicion = true;
         }
+
+        return condicion;
     }
 
-    public int searchIp(String ip) {
-        return ip_list.indexOf(ip);
+    // -------------------
+    // Getters
+    // -------------------
+
+    public String getIp() {
+        return ip;
     }
 
-    public String getIp(int pos) {
-        return ip_list.get(pos);
+    public int getPuertoDestino() {
+        return puertoDestino;
     }
 
-    public ArrayList<String> getIp_list() {
-        return ip_list;
+    public int getPuertoEnvio() {
+        return puertoEnvio;
     }
 
-    public int getId_proceso() {
-        return id_proceso;
+    public ArrayList<Integer> getListaPuertos() {
+        return listaPuertos;
     }
 
-    public LocalTime getHora_levantamiento() {
-        return hora_levantamiento;
+    public int getIdProceso() {
+        return idProceso;
     }
 
-    public LocalTime getUltima_hora_funcionamiento() {
-        return ultima_hora_funcionamiento;
+    public LocalTime getHoraLevantamiento() {
+        return horaLevantamiento;
     }
 
-    public void setId_proceso(int id_proceso) {
-        this.id_proceso = id_proceso;
+    public LocalTime getUltimaHora() {
+        return ultimaHora;
     }
 
-    public void setUltima_hora_funcionamiento(LocalTime ultima_hora_funcionamiento) {
-        this.ultima_hora_funcionamiento = ultima_hora_funcionamiento;
+    // -------------------
+    // Setters
+    // -------------------
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
+
+    public void setPuertoDestino(int puertoDestino) {
+        this.puertoDestino = puertoDestino;
+    }
+
+    public void setPuertoEnvio(int puertoEnvio) {
+        this.puertoEnvio = puertoEnvio;
+    }
+
+    public void setIdProceso(int idProceso) {
+        this.idProceso = idProceso;
+    }
+
+    public void setUltimaHora(LocalTime ultimaHora) {
+        this.ultimaHora = ultimaHora;
+    }
+
 }

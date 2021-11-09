@@ -24,19 +24,12 @@ public class Respuesta {
         }
     }
 
-    // -------------------
-    // Funciones
-    // -------------------
-
-    // Espera por una peticion de algun cliente
-    // Devuelve los argumentos enviados por el cliente
     public ArrayList<Object> getRequest() {
-        byte buffer[] = new byte[1000];
+        byte[] buffer = new byte[1000];
         request = new DatagramPacket(buffer, buffer.length);
 
         try {
             aSocket.receive(request);
-
             ByteArrayInputStream byteArray = new ByteArrayInputStream(request.getData());
             ObjectInputStream is = new ObjectInputStream(byteArray);
             Mensaje msg = (Mensaje) is.readObject();
@@ -59,23 +52,21 @@ public class Respuesta {
         return argumentosRespuesta;
     }
 
-
-    // Envia los argumentos pasados por parametro desde el servidor
-    // No devuelve nada
     public void sendReply(ArrayList<Object> arguments) {
-        Mensaje msg = new Mensaje(1, 0, 0, rr, arguments);
+        Mensaje msg = new Mensaje(1, 0, rr, 0, arguments);
 
         try {
+
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(bytes);
             os.writeObject(msg);
             os.close();
 
-            InetAddress ip_destino = request.getAddress();
-            int puerto_destino = request.getPort();
-            reply = new DatagramPacket(bytes.toByteArray(), bytes.size(), ip_destino, puerto_destino);
-
+            InetAddress ip_dest = request.getAddress();
+            int puerto = request.getPort();
+            reply = new DatagramPacket(bytes.toByteArray(), bytes.size(), ip_dest, puerto);
             aSocket.send(reply);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

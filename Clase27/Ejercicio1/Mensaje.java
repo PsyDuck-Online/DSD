@@ -8,17 +8,13 @@ public class Mensaje implements Serializable {
     private int operationId;
     private ArrayList<Object> arguments;
 
-    public Mensaje(int messageType, int requestId, int operationId, RemoteRef rr, ArrayList<Object> arguments) {
+    public Mensaje(int messageType, int requestId, RemoteRef rr, int operationId, ArrayList<Object> arguments) {
         this.messageType = messageType;
         this.requestId = requestId;
-        this.operationId = operationId;
         this.rr = rr;
+        this.operationId = operationId;
         this.arguments = arguments;
     }
-
-    // -------------------
-    // Getters
-    // -------------------
 
     public int getMessageType() {
         return messageType;

@@ -7,6 +7,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 public class Solicitud {
@@ -27,24 +28,18 @@ public class Solicitud {
         }
     }
 
-    // ---------------
-    // Funciones
-    // ---------------
-
-    // Hace una peticion al servidor
-    // Devuelve una lista con los objetos enviados desde el servidor
     public ArrayList<Object> doOperation(RemoteRef rr, int operationId, ArrayList<Object> arguments) {
         int intento = 0;
-        boolean contSending = true;
+        boolean continue_sending = true;
         byte[] buffer = new byte[1000];
 
         reply = new DatagramPacket(buffer, buffer.length);
 
         argumentosRespuesta.clear();
 
-        while (contSending && intento < limite) {
+        while (continue_sending && intento < limite) {
             try {
-                Mensaje msg = new Mensaje(0, intento, operationId, rr, arguments);
+                Mensaje msg = new Mensaje(0, intento, rr, operationId, arguments);
 
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 ObjectOutputStream os = new ObjectOutputStream(bytes);
@@ -53,14 +48,17 @@ public class Solicitud {
 
                 InetAddress ip_destino = InetAddress.getByName(rr.getIp());
                 int puerto = rr.getPuerto();
+
                 request = new DatagramPacket(bytes.toByteArray(), bytes.size(), ip_destino, puerto);
 
-                intento++;
+                // Se envia la peticion
                 System.out.println(String.format("Intento %d / %d", intento, limite));
                 aSocket.send(request);
+                intento++;
 
+                // Esperamos una respuesta
                 aSocket.receive(reply);
-                contSending = false;
+                continue_sending = false;
 
                 ByteArrayInputStream byteArray = new ByteArrayInputStream(reply.getData());
                 ObjectInputStream is = new ObjectInputStream(byteArray);
@@ -69,6 +67,8 @@ public class Solicitud {
 
                 argumentosRespuesta = msg.getArguments();
 
+            } catch (SocketTimeoutException e) {
+                // Paquete perdido
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -78,9 +78,9 @@ public class Solicitud {
             if (intento >= limite) {
                 argumentosRespuesta.add(0, "./CONN_LOST");
             }
-
         }
 
         return argumentosRespuesta;
     }
+
 }
