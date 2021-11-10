@@ -1,4 +1,13 @@
-public class RemoteRef {
+/* 
+* Clase: Desarrollo de Sistemas Distribuidos.
+* Proyecto: 3.
+* Alumno: Baltazar Real David.
+* Grupo: 4CM11.
+*/
+
+import java.io.Serializable;
+
+public class RemoteRef implements Serializable{
     private String ip;
     private int puerto;
 

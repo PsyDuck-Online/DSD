@@ -1,3 +1,10 @@
+/* 
+* Clase: Desarrollo de Sistemas Distribuidos.
+* Proyecto: 3.
+* Alumno: Baltazar Real David.
+* Grupo: 4CM11.
+*/
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,6 +14,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 public class Solicitud {
@@ -44,11 +52,11 @@ public class Solicitud {
 
         while (contSending && intento < limite) {
             try {
-                Mensaje msg = new Mensaje(0, intento, operationId, rr, arguments);
+                Mensaje msgEnv = new Mensaje(0, intento, operationId, rr, arguments);
 
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 ObjectOutputStream os = new ObjectOutputStream(bytes);
-                os.writeObject(msg);
+                os.writeObject(msgEnv);
                 os.close();
 
                 InetAddress ip_destino = InetAddress.getByName(rr.getIp());
@@ -64,11 +72,13 @@ public class Solicitud {
 
                 ByteArrayInputStream byteArray = new ByteArrayInputStream(reply.getData());
                 ObjectInputStream is = new ObjectInputStream(byteArray);
-                msg = (Mensaje) is.readObject();
+                Mensaje msgRecv = (Mensaje) is.readObject();
                 is.close();
 
-                argumentosRespuesta = msg.getArguments();
+                argumentosRespuesta = msgRecv.getArguments();
 
+            } catch (SocketTimeoutException e) {
+                // No se hace nada
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {

@@ -1,3 +1,10 @@
+/* 
+* Clase: Desarrollo de Sistemas Distribuidos.
+* Proyecto: 3.
+* Alumno: Baltazar Real David.
+* Grupo: 4CM11.
+*/
+
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -5,28 +12,34 @@ import java.util.ArrayList;
 public class Token implements Serializable {
     private String ip;
     private int puertoDestino;
-    private int puertoEnvio;
+    private int puertoEscucha;
     private ArrayList<Integer> listaPuertos;
     private int idProceso;
     private final LocalTime horaLevantamiento;
     private LocalTime ultimaHora;
 
-    public Token(String ip, int puertoDestino, int puertoEnvio, int idProceso) {
+    public Token(String ip, int puertoDestino, int puertoEscucha, int idProceso) {
         this.ip = ip;
         this.puertoDestino = puertoDestino;
-        this.puertoEnvio = puertoEnvio;
+        this.puertoEscucha = puertoEscucha;
         this.idProceso = idProceso;
         horaLevantamiento = LocalTime.now();
         ultimaHora = horaLevantamiento;
         listaPuertos = new ArrayList<>();
-        listaPuertos.add(puertoEnvio);
+        listaPuertos.add(puertoEscucha);
     }
 
     // -------------------
     // Funciones
     // -------------------
 
-    // Agrega un puerto a la lista 
+    // Busca la posicion de un puerto
+    // Devuelve la posicion del puerto
+    public int buscarPuerto(int puerto) {
+        return listaPuertos.indexOf(puerto);
+    }
+
+    // Agrega un puerto a la lista
     // Devuelve True si se pudo a gregar y False si no se agrego
     public boolean agregarPuerto(int puerto) {
         boolean condicion = false;
@@ -66,8 +79,8 @@ public class Token implements Serializable {
         return puertoDestino;
     }
 
-    public int getPuertoEnvio() {
-        return puertoEnvio;
+    public int getPuertoEscucha() {
+        return puertoEscucha;
     }
 
     public ArrayList<Integer> getListaPuertos() {
@@ -98,8 +111,8 @@ public class Token implements Serializable {
         this.puertoDestino = puertoDestino;
     }
 
-    public void setPuertoEnvio(int puertoEnvio) {
-        this.puertoEnvio = puertoEnvio;
+    public void setPuertoEscucha(int puertoEscucha) {
+        this.puertoEscucha = puertoEscucha;
     }
 
     public void setIdProceso(int idProceso) {

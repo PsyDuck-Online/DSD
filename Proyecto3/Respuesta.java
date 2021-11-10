@@ -1,3 +1,10 @@
+/* 
+* Clase: Desarrollo de Sistemas Distribuidos.
+* Proyecto: 3.
+* Alumno: Baltazar Real David.
+* Grupo: 4CM11.
+*/
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
